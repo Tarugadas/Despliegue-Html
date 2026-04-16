@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Galería</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <span class="logo">◈ GALERÍA</span>
+      <p class="header-sub">Colección visual</p>
+    </div>
+    <div class="header-line"></div>
+  </header>
+
+  <!-- TABS -->
+  <nav class="tabs-nav">
+    <button class="tab-btn active" data-tab="naturaleza">🌿 Paleontologia</button>
+    <button class="tab-btn" data-tab="arquitectura">🏛 Arquitectura</button>
+    <button class="tab-btn" data-tab="abstracto">🎨 Abstracto</button>
+    <button class="tab-btn" data-tab="retratos">🧍 Retratos</button>
+    <button class="tab-btn" data-tab="urbano">🌆 Modernismo</button>
+  </nav>
+
+  <!-- TAB PANELS -->
+  <main class="content">
+
+    <!-- Naturaleza -->
+    <section class="tab-panel active" id="paleontologia">
+      <div class="panel-header">
+        <h2>Naturaleza</h2>
+        <p>Paisajes, flora y fauna del mundo natural</p>
+      </div>
+      <div class="gallery-grid" id="grid-naturaleza">
+        <!-- Las tarjetas se generan con JS -->
+      </div>
+    </section>
+
+    <!-- Arquitectura -->
+    <section class="tab-panel" id="arquitectura">
+      <div class="panel-header">
+        <h2>Arquitectura</h2>
+        <p>Estructuras, espacios y diseño urbano</p>
+      </div>
+      <div class="gallery-grid" id="grid-arquitectura"></div>
+    </section>
+
+    <!-- Abstracto -->
+    <section class="tab-panel" id="abstracto">
+      <div class="panel-header">
+        <h2>Abstracto</h2>
+        <p>Formas, colores y texturas sin límites</p>
+      </div>
+      <div class="gallery-grid" id="grid-abstracto"></div>
+    </section>
+
+    <!-- Retratos -->
+    <section class="tab-panel" id="retratos">
+      <div class="panel-header">
+        <h2>Retratos</h2>
+        <p>Expresiones, luz y momento humano</p>
+      </div>
+      <div class="gallery-grid" id="grid-retratos"></div>
+    </section>
+
+    <!-- Urbano -->
+    <section class="tab-panel" id="urbano">
+      <div class="panel-header">
+        <h2>Urbano</h2>
+        <p>Calles, luces y vida en la ciudad</p>
+      </div>
+      <div class="gallery-grid" id="grid-urbano"></div>
+    </section>
+
+  </main>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lb-close">✕</button>
+    <button class="lb-arrow lb-prev" id="lb-prev">‹</button>
+    <button class="lb-arrow lb-next" id="lb-next">›</button>
+    <div class="lb-wrapper">
+      <img src="" alt="" id="lb-img" />
+      <div class="lb-info">
+        <span class="lb-title" id="lb-title"></span>
+        <span class="lb-counter" id="lb-counter"></span>
+      </div>
+    </div>
+  </div>
+  <div class="lb-overlay" id="lb-overlay"></div>
+
+  <script>
+    // ─── Datos de ejemplo ────────────────────────────────────────────────────
+    // Reemplaza los src con tus propias imágenes.
+    // Para agregar imágenes locales usa: src="ruta/a/tu/imagen.jpg"
+    const TABS_DATA = {
+      Paleontologia: [
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "", title: "" },
+
+      ],
+      arquitectura: [
+        { src: "Imagenes/20260315_035156.jpg",  title: "Fachada modernista" },
+        { src: "",  title: "Arco de piedra" },
+        { src: "",  title: "Torre de cristal" },
+        { src: "",  title: "Catedral gótica" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "", title: "" },
+      ],
+      abstracto: [
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "ab4/800/600",  title: "" },
+        { src: "ab5/800/600",  title: "" },
+        { src: "ab6/800/600",  title: "" },
+        { src: "ab7/800/600",  title: "Niebla de tinta" },
+        { src: "ab8/800/600",  title: "Espiral dorada" },
+        { src: "ab9/800/600",  title: "Sombras cruzadas" },
+      ],
+      retratos: [
+        { src: "",  title: "Mirada directa" },
+        { src: "",  title: "Perfil al sol" },
+        { src: "",  title: "Sombra de perfil" },
+        { src: "",  title: "Sonrisa espontánea" },
+        { src: "",  title: "Gesto silencioso" },
+        { src: "",  title: "Luz lateral" },
+        { src: "",  title: "Expresión íntima" },
+        { src: "",  title: "Contraluz" },
+        { src: "",  title: "Entre sombras" },
+        { src: "", title: "Ojos al cielo" },
+      ],
+      urbano: [
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "",  title: "" },
+        { src: "", title: "" },
+        { src: "", title: "" },
+        { src: "", title: "" },
+      ]
+    };
+
+    // ─── Generar grids ───────────────────────────────────────────────────────
+    let currentImages = [];
+    let currentIndex  = 0;
+
+    function buildGrids() {
+      for (const [tab, images] of Object.entries(TABS_DATA)) {
+        const grid = document.getElementById(`grid-${tab}`);
+        images.forEach((img, i) => {
+          const card = document.createElement("div");
+          card.className = "img-card";
+          card.innerHTML = `
+            <div class="img-wrap">
+              <img src="${img.src}" alt="${img.title}" loading="lazy" />
+              <div class="img-overlay">
+                <span class="img-zoom">⤢</span>
+              </div>
+            </div>
+            <p class="img-title">${img.title}</p>
+          `;
+          card.querySelector(".img-wrap").addEventListener("click", () => {
+            openLightbox(tab, i);
+          });
+          grid.appendChild(card);
+        });
+      }
+    }
+
+    // ─── Tabs ────────────────────────────────────────────────────────────────
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    // ─── Lightbox ───────────────────────────────────────────────────────────
+    const lightbox  = document.getElementById("lightbox");
+    const lbOverlay = document.getElementById("lb-overlay");
+    const lbImg     = document.getElementById("lb-img");
+    const lbTitle   = document.getElementById("lb-title");
+    const lbCounter = document.getElementById("lb-counter");
+
+    function openLightbox(tab, index) {
+      currentImages = TABS_DATA[tab];
+      currentIndex  = index;
+      updateLightbox();
+      lightbox.classList.add("open");
+      lbOverlay.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function updateLightbox() {
+      const item = currentImages[currentIndex];
+      lbImg.src          = item.src;
+      lbImg.alt          = item.title;
+      lbTitle.textContent   = item.title;
+      lbCounter.textContent = `${currentIndex + 1} / ${currentImages.length}`;
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("open");
+      lbOverlay.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    document.getElementById("lb-close").addEventListener("click", closeLightbox);
+    lbOverlay.addEventListener("click", closeLightbox);
+
+    document.getElementById("lb-prev").addEventListener("click", () => {
+      currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+      updateLightbox();
+    });
+
+    document.getElementById("lb-next").addEventListener("click", () => {
+      currentIndex = (currentIndex + 1) % currentImages.length;
+      updateLightbox();
+    });
+
+    // Teclado
+    document.addEventListener("keydown", e => {
+      if (!lightbox.classList.contains("open")) return;
+      if (e.key === "ArrowRight") { currentIndex = (currentIndex + 1) % currentImages.length; updateLightbox(); }
+      if (e.key === "ArrowLeft")  { currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length; updateLightbox(); }
+      if (e.key === "Escape")     { closeLightbox(); }
+    });
+
+    buildGrids();
+  </script>
+</body>
+</html>
