@@ -12,31 +12,32 @@
   <!-- HEADER -->
   <header>
     <div class="header-inner">
-      <span class="logo">◈ GALERÍA</span>
+      <span class="logo">◈ Museo</span>
       <p class="header-sub">Colección visual</p>
+      <button id="theme-toggle" class="theme-btn">🌓</button> 
     </div>
     <div class="header-line"></div>
   </header>
 
   <!-- TABS -->
   <nav class="tabs-nav">
-    <button class="tab-btn active" data-tab="naturaleza">🌿 Paleontologia</button>
+    <button class="tab-btn active" data-tab="paleontologia">🌿 Paleontologia</button>
     <button class="tab-btn" data-tab="arquitectura">🏛 Arquitectura</button>
     <button class="tab-btn" data-tab="abstracto">🎨 Abstracto</button>
     <button class="tab-btn" data-tab="retratos">🧍 Retratos</button>
-    <button class="tab-btn" data-tab="urbano">🌆 Modernismo</button>
+    <button class="tab-btn" data-tab="modernismo">🌆 Modernismo</button>
   </nav>
 
   <!-- TAB PANELS -->
   <main class="content">
 
-    <!-- Naturaleza -->
+    <!-- Paleontologia -->
     <section class="tab-panel active" id="paleontologia">
       <div class="panel-header">
-        <h2>Naturaleza</h2>
+        <h2>Paleontologia</h2>
         <p>Paisajes, flora y fauna del mundo natural</p>
       </div>
-      <div class="gallery-grid" id="grid-naturaleza">
+      <div class="gallery-grid" id="grid-paleontologia">
         <!-- Las tarjetas se generan con JS -->
       </div>
     </section>
@@ -68,13 +69,13 @@
       <div class="gallery-grid" id="grid-retratos"></div>
     </section>
 
-    <!-- Urbano -->
-    <section class="tab-panel" id="urbano">
+    <!-- Modernismo -->
+    <section class="tab-panel" id="modernismo">
       <div class="panel-header">
-        <h2>Urbano</h2>
+        <h2>Modernismo</h2>
         <p>Calles, luces y vida en la ciudad</p>
       </div>
-      <div class="gallery-grid" id="grid-urbano"></div>
+      <div class="gallery-grid" id="grid-modernismo"></div>
     </section>
 
   </main>
@@ -99,8 +100,8 @@
     // Reemplaza los src con tus propias imágenes.
     // Para agregar imágenes locales usa: src="ruta/a/tu/imagen.jpg"
     const TABS_DATA = {
-      Paleontologia: [
-        { src: "",  title: "" },
+      paleontologia: [
+        { src: "trex_site.jpg",  title: "Rey tirano" },
         { src: "",  title: "" },
         { src: "",  title: "" },
         { src: "",  title: "" },
@@ -144,10 +145,10 @@
         { src: "",  title: "Luz lateral" },
         { src: "",  title: "Expresión íntima" },
         { src: "",  title: "Contraluz" },
-        { src: "",  title: "Entre sombras" },
-        { src: "", title: "Ojos al cielo" },
+        { src: "",  title: "" },
+        { src: "", title: "" },
       ],
-      urbano: [
+      modernismo: [
         { src: "",  title: "" },
         { src: "",  title: "" },
         { src: "",  title: "" },
@@ -251,7 +252,75 @@
       if (e.key === "Escape")     { closeLightbox(); }
     });
 
-    buildGrids();
+document.addEventListener("DOMContentLoaded", () => {
+    const themeToggle = document.getElementById("theme-toggle");
+    const body = document.body;
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    
+    const lbClose = document.getElementById("lb-close");
+    const lbOverlay = document.getElementById("lb-overlay");
+    const lbPrev = document.getElementById("lb-prev");
+    const lbNext = document.getElementById("lb-next");
+
+    if (themeToggle) {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
+            body.classList.add("dark-mode");
+            themeToggle.textContent = "☀️";
+        }
+
+        themeToggle.addEventListener("click", () => {
+            body.classList.toggle("dark-mode");
+            const isDark = body.classList.contains("dark-mode");
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+            themeToggle.textContent = isDark ? "☀️" : "🌙";
+        });
+    }
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const tabId = btn.getAttribute("data-tab");
+            
+            // Limpiar clases de pestañas previas
+            const classesToRemove = Array.from(body.classList).filter(c => c.startsWith('tab-'));
+            body.classList.remove(...classesToRemove);
+            
+            body.classList.add("tab-" + tabId);
+            
+        });
+    });
+
+    if (lbClose) lbClose.addEventListener("click", closeLightbox);
+    if (lbOverlay) lbOverlay.addEventListener("click", closeLightbox);
+    
+    if (lbPrev) {
+        lbPrev.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+            updateLightbox();
+        });
+    }
+
+    if (lbNext) {
+        lbNext.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % currentImages.length;
+            updateLightbox();
+        });
+    }
+
+    document.addEventListener("keydown", e => {
+        const lightbox = document.getElementById("lightbox"); // o el ID que uses
+        if (!lightbox || !lightbox.classList.contains("open")) return;
+        
+        if (e.key === "ArrowRight") { currentIndex = (currentIndex + 1) % currentImages.length; updateLightbox(); }
+        if (e.key === "ArrowLeft")  { currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length; updateLightbox(); }
+        if (e.key === "Escape")     { closeLightbox(); }
+    });
+
+    body.classList.add("tab-paleontologia"); // Color inicial
+    if (typeof buildGrids === 'function') {
+        buildGrids(); // Dibuja las imágenes
+    }
+});
   </script>
 </body>
 </html>
